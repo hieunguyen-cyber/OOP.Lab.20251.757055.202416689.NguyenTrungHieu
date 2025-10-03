@@ -1,4 +1,4 @@
-package Lab01;
+package code;
 import java.util.Scanner;
 
 public class drawTriangle {

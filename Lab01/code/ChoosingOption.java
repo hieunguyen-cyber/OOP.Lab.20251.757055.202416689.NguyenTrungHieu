@@ -1,4 +1,4 @@
-package Lab01;
+package code;
 import javax.swing.*;
 
 public class ChoosingOption {
