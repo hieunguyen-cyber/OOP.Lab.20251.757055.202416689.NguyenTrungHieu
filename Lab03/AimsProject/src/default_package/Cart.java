@@ -86,8 +86,51 @@ public class Cart {
         }
         return total;
     }
-	
-	
-	
-	
+    public void printCart() {
+        System.out.println("***********************CART***********************");
+        System.out.println("Ordered Items:");
+        float totalCost = 0;
+
+        for (int i = 0; i < qtyOrdered; i++) {
+            DigitalVideoDisc disc = itemsOrdered[i];
+            System.out.println((i + 1) + ". DVD - " + disc.toString());
+            totalCost += disc.getCost();
+        }
+
+        System.out.println("Total cost: " + totalCost + " $");
+        System.out.println("***************************************************");
+    }
+
+    public void searchById(int id) {
+        boolean found = false;
+        System.out.println("Searching for DVD with ID: " + id);
+
+        for (int i = 0; i < qtyOrdered; i++) {
+            if (itemsOrdered[i].isIdMatch(id)) {
+                System.out.println("Found: " + itemsOrdered[i].toString());
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No match found for ID: " + id);
+        }
+    }
+
+    public void searchByTitle(String title) {
+        boolean found = false;
+        System.out.println("Searching for DVD with title: \"" + title + "\"");
+
+        for (int i = 0; i < qtyOrdered; i++) {
+            if (itemsOrdered[i].isTitleMatch(title)) {
+                System.out.println("Found: " + itemsOrdered[i].toString());
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No match found for title: \"" + title + "\"");
+        }
+    }
 }
