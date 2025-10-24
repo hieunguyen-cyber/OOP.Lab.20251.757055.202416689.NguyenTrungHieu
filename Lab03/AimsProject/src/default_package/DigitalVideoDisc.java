@@ -79,4 +79,20 @@ public class DigitalVideoDisc {
 	public int getId() {
 		return id;
 	}
+
+	@Override
+	public String toString() {
+		return this.getTitle() + " - " 
+			+ this.getCategory() + " - " 
+			+ this.getDirector() + " - " 
+			+ this.getLength() + ": " 
+			+ this.getCost() + " $";
+	}
+	public boolean isIdMatch(int id) {
+		return this.id == id;
+	}
+
+	public boolean isTitleMatch(String title) {
+		return this.title != null && this.title.equalsIgnoreCase(title);
+	}
 }
