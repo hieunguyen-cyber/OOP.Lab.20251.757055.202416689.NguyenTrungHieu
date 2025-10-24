@@ -1,2 +1,8 @@
 2.1 Compare to an array parameter. What do you prefer in this case?
 I would prefer using the varargs parameter because it’s more flexible and convenient. It allows adding one or multiple DVDs without needing to create an array manually.
+
+3. Is JAVA a Pass by Value or a Pass by Reference programming language?
+Java is pass by value. It always passes a copy of the variable’s value. For objects, this value is a copy of the reference, not the object itself.
+
+	•	After calling swap(jungleDVD, cinderellaDVD), the titles stay the same because Java passes copies of the references — swapping those copies doesn’t affect the original variables.
+	•	After calling changeTitle(jungleDVD, cinderellaDVD.getTitle()), the JungleDVD’s title changes because the method modifies the object’s internal state through the copied reference, which still points to the same object in memory.
