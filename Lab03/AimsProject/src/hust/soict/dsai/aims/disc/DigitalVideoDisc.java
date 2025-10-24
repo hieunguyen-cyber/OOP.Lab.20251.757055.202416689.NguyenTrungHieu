@@ -1,4 +1,4 @@
-package default_package;
+package hust.soict.dsai.aims.disc;
 
 public class DigitalVideoDisc {
 	public String getTitle() {
