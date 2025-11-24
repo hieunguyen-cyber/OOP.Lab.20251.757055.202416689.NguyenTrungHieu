@@ -50,3 +50,6 @@ java.lang.NullPointerException: Cannot invoke "org.osgi.framework.BundleContext.
 	 at org.eclipse.oomph.internal.ui.EarlyStart.run(EarlyStart.java:119)
 	 at org.eclipse.oomph.internal.ui.EarlyStart$1.run(EarlyStart.java:98)
 	 at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY ch.qos.logback.classic 1 0 2025-11-24 07:48:36.852
+!MESSAGE Logback config file: /Users/hieunguyen/OOP_Lab/.metadata/.plugins/org.eclipse.m2e.logback/logback.2.7.100.20250418-1315.xml
