@@ -1,5 +1,75 @@
-Question 12:
-•	Comparable vs Comparator: Comparable định nghĩa một quy tắc sắp xếp mặc định (compareTo()), còn Comparator cho phép nhiều quy tắc sắp xếp thay thế (compare()).
-•	Media & subclasses: Media có thể implement Comparable<Media> cho thứ tự chung (title → cost), trong khi các subclass như DigitalVideoDisc có thể override compareTo() để áp dụng quy tắc riêng (title → length giảm dần → cost).
-•	Multiple ordering rules: Vì một lớp chỉ có một compareTo(), muốn nhiều thứ tự sắp xếp phải dùng Comparator bổ sung cho từng quy tắc khác.
-•	Mixed lists & flexibility: Giữ Media là Comparable, override riêng cho DVD; các loại media khác dùng compareTo mặc định → có thể sắp xếp danh sách hỗn hợp mà vẫn đảm bảo type safety và quy tắc riêng biệt.
+Question9: Which classes are aggregates of other classes? Checking all constructors of whole classes if they initialize for their parts?
+Ans: 
+In this design the aggregate classes are:
+	•	Cart → aggregates many Media (list of items in the cart)
+	•	Store → aggregates many Media
+	•	CompactDisc → aggregates many Track
+	•	Book → aggregates a list of author names 
+Media, Disc, DigitalVideoDisc, Track, etc. are not aggregates; they either inherit from each other or are leaf classes
+
+About constructors:
+	•	Cart and Store constructors must create their internal lists: itemsOrdered = new ArrayList<Media>(), itemsInStore = new ArrayList<Media>()
+	•	CompactDisc constructor must ensure tracks = new ArrayList<Track>() (or initialize it at field declaration)
+	•	Book constructor (or field declaration) must initialize authors = new ArrayList<String>()
+If these constructors (or field initializers) correctly create those collections, then each “whole” class properly initializes its “parts” and the aggregations are consistent
+
+
+
+Question10: When overriding the equals() method of the Object class, you will have to cast the Object parameter obj to the type of Object that you are dealing with. For example, in the Media class, you must cast the Object obj to a Media, and then check the equality of the two objects’ attributes as the above requirements (i.e. title for Media; title and length for Track). If the passing object is not an instance of Media, what happens?
+Ans:
+If we blindly cast the Object parameter to Media and it is not actually a Media, the JVM will throw a ClassCastException at runtime.
+So in a proper implementation:
+	•	Non-Media objects do not cause an exception,
+	•	They simply make equals return false.
+
+
+
+    
+Question12: Alternatively, to compare items in the cart, instead of using Comparator, we can use the Comparable interface and override the compareTo()method. You can refer to the Java docs to see the information of this interface.
+Suppose we are taking this Comparable interface approach.
+
+-Q: What class should implement the Comparable interface?
+->>Ans: The class that should implement Comparable<Media> is Media, the parent class of all media types.
+the reason is that:
+Sorting is applied to all media in the cart (Books, DVDs, CDs).
+Therefore the common parent type should define the natural ordering that all subclasses inherit.
+
+-Q: In those classes, how should you implement the compareTo()method be to reflect the ordering that we want?
+->>Ans: Inside Media.compareTo(Media other) we should define one single natural ordering.
+For example, if the default ordering is:
+by title (ascending), then by cost (descending)
+
+-Q: Can we have two ordering rules of the item (by title then cost and by cost then title) if we use this Comparable interface approach?
+->>Ans: No, we cannot
+Comparable allows only one ordering — the “natural order” defined inside compareTo().
+If we need two different sort rules:
+	•	by title → cost
+	•	or by cost → title
+then using only Comparable is insufficient.
+So we still need Comparator objects for alternative orders.
+
+- Suppose the DVDs has a different ordering rule from the other media types, that is by title, then decreasing length, then cost. How would you modify your code to allow this?
+->>Ans: I would modify my code like this following code:
+Keep Comparable in Media, use a special Comparator for DVDs
+Define DVD-specific sorting rule in a separate Comparator:
+\\\\\
+    public class DvdComparator implements Comparator<Media> {
+        @Override
+        public int compare(Media m1, Media m2) {
+            if (m1 instanceof DigitalVideoDisc && m2 instanceof DigitalVideoDisc) {
+                DigitalVideoDisc d1 = (DigitalVideoDisc) m1;
+                DigitalVideoDisc d2 = (DigitalVideoDisc) m2;
+
+                int titleCmp = d1.getTitle().compareToIgnoreCase(d2.getTitle());
+                if (titleCmp != 0) return titleCmp;
+
+                int lengthCmp = Integer.compare(d2.getLength(), d1.getLength()); // descending
+                if (lengthCmp != 0) return lengthCmp;
+
+                return Float.compare(d1.getCost(), d2.getCost()); // ascending or your rule
+            }
+
+            // default ordering for non-DVDs
+            return m1.compareTo(m2);
+        }
+    }
